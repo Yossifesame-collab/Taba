@@ -1,0 +1,579 @@
+{
+  "entities": {
+    "Category": {
+      "title": "Category",
+      "description": "Store product category",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "sortOrder": { "type": "number" },
+        "iconKey": { "type": "string", "maxLength": 40 }
+      },
+      "required": ["id", "name", "sortOrder"]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "Storefront and inventory product item",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "shortDescription": { "type": "string", "maxLength": 400 },
+        "categoryId": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "availability": { "type": "string", "enum": ["متوفر", "كمية محدودة", "غير متوفر"] },
+        "stockQty": { "type": "number" },
+        "lowStockThreshold": { "type": "number" },
+        "internalPrice": { "type": "number" },
+        "isNew": { "type": "boolean" },
+        "isOffer": { "type": "boolean" },
+        "offerStartsAt": { "type": "string", "maxLength": 64 },
+        "offerExpiresAt": { "type": "string", "maxLength": 64 },
+        "isFeaturedPick": { "type": "boolean" },
+        "requestCount": { "type": "number" },
+        "isVisible": { "type": "boolean" },
+        "visualKind": { "type": "string", "maxLength": 40 },
+        "imageUrl": { "type": "string", "maxLength": 600000 },
+        "createdAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": [
+        "id",
+        "name",
+        "shortDescription",
+        "categoryId",
+        "availability",
+        "stockQty",
+        "lowStockThreshold",
+        "internalPrice",
+        "isNew",
+        "isOffer",
+        "isFeaturedPick",
+        "requestCount",
+        "isVisible",
+        "visualKind",
+        "createdAt"
+      ]
+    },
+    "Banner": {
+      "title": "Banner",
+      "description": "Promotional homepage slider banner",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "title": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "subtitle": { "type": "string", "maxLength": 320 },
+        "badgeText": { "type": "string", "maxLength": 80 },
+        "ctaText": { "type": "string", "maxLength": 80 },
+        "targetCategoryId": { "type": "string", "maxLength": 128 },
+        "sortOrder": { "type": "number" },
+        "slideDurationSec": { "type": "number" },
+        "isOfferBanner": { "type": "boolean" },
+        "offerStartsAt": { "type": "string", "maxLength": 64 },
+        "offerExpiresAt": { "type": "string", "maxLength": 64 },
+        "isActive": { "type": "boolean" },
+        "themeTone": { "type": "string", "enum": ["blue", "navy", "crimson", "slate"] },
+        "imageUrl": { "type": "string", "maxLength": 600000 }
+      },
+      "required": [
+        "id",
+        "title",
+        "subtitle",
+        "ctaText",
+        "sortOrder",
+        "slideDurationSec",
+        "isOfferBanner",
+        "isActive",
+        "themeTone"
+      ]
+    },
+    "DeliveryZone": {
+      "title": "DeliveryZone",
+      "description": "Supported delivery area and fee configuration",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "fee": { "type": "number" },
+        "minOrderNote": { "type": "string", "maxLength": 200 },
+        "minItemsCount": { "type": "number" },
+        "isActive": { "type": "boolean" },
+        "deliveryHours": { "type": "string", "maxLength": 200 }
+      },
+      "required": ["id", "name", "fee", "minOrderNote", "minItemsCount", "isActive", "deliveryHours"]
+    },
+    "Coupon": {
+      "title": "Coupon",
+      "description": "Discount coupon verified on checkout",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "code": { "type": "string", "minLength": 2, "maxLength": 40, "pattern": "^[A-Z0-9_\\-]+$" },
+        "description": { "type": "string", "maxLength": 200 },
+        "discountType": { "type": "string", "enum": ["percent", "fixed"] },
+        "discountValue": { "type": "number" },
+        "minItemsCount": { "type": "number" },
+        "maxUses": { "type": "number" },
+        "usedCount": { "type": "number" },
+        "expiresAt": { "type": "string", "maxLength": 64 },
+        "isActive": { "type": "boolean" }
+      },
+      "required": [
+        "id",
+        "code",
+        "description",
+        "discountType",
+        "discountValue",
+        "minItemsCount",
+        "maxUses",
+        "usedCount",
+        "expiresAt",
+        "isActive"
+      ]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Full customer order including delivery address and phone (staff-read only)",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "orderNumber": { "type": "string", "maxLength": 40, "pattern": "^TABA-[0-9]+$" },
+        "customerName": { "type": "string", "minLength": 2, "maxLength": 120 },
+        "customerPhone": { "type": "string", "minLength": 8, "maxLength": 20, "pattern": "^[0-9+]+$" },
+        "zoneId": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "zoneName": { "type": "string", "maxLength": 120 },
+        "addressType": { "type": "string", "maxLength": 40 },
+        "streetName": { "type": "string", "maxLength": 160 },
+        "buildingNumber": { "type": "string", "maxLength": 40 },
+        "floorNumber": { "type": "string", "maxLength": 40 },
+        "apartmentNumber": { "type": "string", "maxLength": 40 },
+        "locationUrl": { "type": "string", "maxLength": 400 },
+        "detailedAddress": { "type": "string", "minLength": 3, "maxLength": 400 },
+        "landmark": { "type": "string", "maxLength": 200 },
+        "notes": { "type": "string", "maxLength": 500 },
+        "couponCode": { "type": "string", "maxLength": 40 },
+        "deliveryFee": { "type": "number" },
+        "reviewedDiscount": { "type": "number" },
+        "reviewedTotal": { "type": "number" },
+        "priceReviewedByStaff": { "type": "boolean" },
+        "customerApprovedTotal": { "type": "boolean" },
+        "paymentMethod": { "type": "string", "enum": ["الدفع عند الاستلام"] },
+        "status": {
+          "type": "string",
+          "enum": ["طلب جديد", "تم التأكيد", "جاري التجهيز", "خرج للتوصيل", "تم التسليم", "ملغي"]
+        },
+        "cancellationReason": { "type": "string", "maxLength": 300 },
+        "items": { "type": "array" },
+        "history": { "type": "array" },
+        "createdAt": { "type": "string", "maxLength": 64 },
+        "serverCreatedAt": { "type": "object" },
+        "idempotencyKey": { "type": "string", "maxLength": 128 }
+      },
+      "required": [
+        "id",
+        "orderNumber",
+        "customerName",
+        "customerPhone",
+        "zoneId",
+        "zoneName",
+        "detailedAddress",
+        "landmark",
+        "notes",
+        "deliveryFee",
+        "reviewedDiscount",
+        "priceReviewedByStaff",
+        "customerApprovedTotal",
+        "paymentMethod",
+        "status",
+        "items",
+        "history",
+        "createdAt",
+        "serverCreatedAt"
+      ]
+    },
+    "OrderTracking": {
+      "title": "OrderTracking",
+      "description": "Keyed private tracking mirror fetched strictly by orderNumber_phone without list queries",
+      "type": "object",
+      "properties": {
+        "orderId": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "orderNumber": { "type": "string", "maxLength": 40, "pattern": "^TABA-[0-9]+$" },
+        "customerName": { "type": "string", "maxLength": 120 },
+        "zoneName": { "type": "string", "maxLength": 120 },
+        "addressType": { "type": "string", "maxLength": 40 },
+        "detailedAddress": { "type": "string", "maxLength": 400 },
+        "landmark": { "type": "string", "maxLength": 200 },
+        "locationUrl": { "type": "string", "maxLength": 400 },
+        "notes": { "type": "string", "maxLength": 500 },
+        "couponCode": { "type": "string", "maxLength": 40 },
+        "deliveryFee": { "type": "number" },
+        "reviewedDiscount": { "type": "number" },
+        "reviewedTotal": { "type": "number" },
+        "priceReviewedByStaff": { "type": "boolean" },
+        "customerApprovedTotal": { "type": "boolean" },
+        "status": {
+          "type": "string",
+          "enum": ["طلب جديد", "تم التأكيد", "جاري التجهيز", "خرج للتوصيل", "تم التسليم", "ملغي"]
+        },
+        "cancellationReason": { "type": "string", "maxLength": 300 },
+        "items": { "type": "array" },
+        "history": { "type": "array" },
+        "createdAt": { "type": "string", "maxLength": 64 },
+        "updatedAt": { "type": "object" }
+      },
+      "required": [
+        "orderId",
+        "orderNumber",
+        "customerName",
+        "zoneName",
+        "detailedAddress",
+        "landmark",
+        "notes",
+        "deliveryFee",
+        "reviewedDiscount",
+        "priceReviewedByStaff",
+        "customerApprovedTotal",
+        "status",
+        "items",
+        "history",
+        "createdAt"
+      ]
+    },
+    "OrderCustomerAction": {
+      "title": "OrderCustomerAction",
+      "description": "Customer pre-prep edit, cancel, or substitute response synced by staff",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "orderId": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "orderNumber": { "type": "string", "maxLength": 40 },
+        "customerPhone": { "type": "string", "maxLength": 20 },
+        "actionType": { "type": "string", "enum": ["edit", "cancel", "substitute_response"] },
+        "payload": { "type": "object" },
+        "createdAt": { "type": "object" }
+      },
+      "required": ["id", "orderId", "orderNumber", "customerPhone", "actionType", "payload", "createdAt"]
+    },
+    "PhoneOrderHistory": {
+      "title": "PhoneOrderHistory",
+      "description": "Index of order numbers associated with a specific customer phone number",
+      "type": "object",
+      "properties": {
+        "orderNumbers": { "type": "array" },
+        "updatedAt": { "type": "object" }
+      },
+      "required": ["orderNumbers", "updatedAt"]
+    },
+    "ProductReview": {
+      "title": "ProductReview",
+      "description": "Customer rating and comment on a product",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "productId": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "productName": { "type": "string", "maxLength": 160 },
+        "customerName": { "type": "string", "minLength": 2, "maxLength": 100 },
+        "rating": { "type": "number" },
+        "comment": { "type": "string", "minLength": 2, "maxLength": 600 },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"] },
+        "createdAt": { "type": "string", "maxLength": 64 },
+        "serverCreatedAt": { "type": "object" }
+      },
+      "required": [
+        "id",
+        "productId",
+        "productName",
+        "customerName",
+        "rating",
+        "comment",
+        "status",
+        "createdAt",
+        "serverCreatedAt"
+      ]
+    },
+    "ComplaintSuggestion": {
+      "title": "ComplaintSuggestion",
+      "description": "Customer complaint or suggestion submitted via support hub",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "type": { "type": "string", "enum": ["شكوى", "مقترح"] },
+        "customerName": { "type": "string", "minLength": 2, "maxLength": 120 },
+        "customerPhone": { "type": "string", "minLength": 8, "maxLength": 20 },
+        "orderNumber": { "type": "string", "maxLength": 40 },
+        "message": { "type": "string", "minLength": 3, "maxLength": 1000 },
+        "status": { "type": "string", "enum": ["جديد", "قيد المراجعة", "تم الحل"] },
+        "adminReply": { "type": "string", "maxLength": 600 },
+        "createdAt": { "type": "string", "maxLength": 64 },
+        "serverCreatedAt": { "type": "object" }
+      },
+      "required": [
+        "id",
+        "type",
+        "customerName",
+        "customerPhone",
+        "message",
+        "status",
+        "createdAt",
+        "serverCreatedAt"
+      ]
+    },
+    "ReturnRequest": {
+      "title": "ReturnRequest",
+      "description": "Return or exchange request with returned items and reviewer assignment",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "returnCode": { "type": "string", "maxLength": 40, "pattern": "^RET-[0-9]+$" },
+        "orderNumber": { "type": "string", "maxLength": 40 },
+        "customerName": { "type": "string", "minLength": 2, "maxLength": 120 },
+        "customerPhone": { "type": "string", "minLength": 8, "maxLength": 20 },
+        "productName": { "type": "string", "maxLength": 300 },
+        "returnedItems": { "type": "array" },
+        "requestType": { "type": "string", "enum": ["استبدال", "استرجاع"] },
+        "reason": { "type": "string", "minLength": 3, "maxLength": 600 },
+        "status": {
+          "type": "string",
+          "enum": [
+            "جديد",
+            "قيد المراجعة",
+            "بانتظار استلام المنتج",
+            "تمت الموافقة",
+            "تم الاستبدال / الاسترجاع",
+            "مرفوض"
+          ]
+        },
+        "assignedStaffId": { "type": "string", "maxLength": 128 },
+        "assignedStaffName": { "type": "string", "maxLength": 120 },
+        "adminNote": { "type": "string", "maxLength": 600 },
+        "createdAt": { "type": "string", "maxLength": 64 },
+        "updatedAt": { "type": "string", "maxLength": 64 },
+        "serverCreatedAt": { "type": "object" }
+      },
+      "required": [
+        "id",
+        "returnCode",
+        "orderNumber",
+        "customerName",
+        "customerPhone",
+        "productName",
+        "returnedItems",
+        "requestType",
+        "reason",
+        "status",
+        "createdAt",
+        "serverCreatedAt"
+      ]
+    },
+    "ReturnTracking": {
+      "title": "ReturnTracking",
+      "description": "Keyed private return tracking view keyed by code_phone without list queries",
+      "type": "object",
+      "properties": {
+        "returnId": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "returnCode": { "type": "string", "maxLength": 40, "pattern": "^RET-[0-9]+$" },
+        "orderNumber": { "type": "string", "maxLength": 40 },
+        "requestType": { "type": "string", "enum": ["استبدال", "استرجاع"] },
+        "reason": { "type": "string", "maxLength": 600 },
+        "status": {
+          "type": "string",
+          "enum": [
+            "جديد",
+            "قيد المراجعة",
+            "بانتظار استلام المنتج",
+            "تمت الموافقة",
+            "تم الاستبدال / الاسترجاع",
+            "مرفوض"
+          ]
+        },
+        "assignedStaffName": { "type": "string", "maxLength": 120 },
+        "adminNote": { "type": "string", "maxLength": 600 },
+        "returnedItems": { "type": "array" },
+        "createdAt": { "type": "string", "maxLength": 64 },
+        "updatedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": [
+        "returnId",
+        "returnCode",
+        "orderNumber",
+        "requestType",
+        "reason",
+        "status",
+        "returnedItems",
+        "createdAt"
+      ]
+    },
+    "FaqItem": {
+      "title": "FaqItem",
+      "description": "Storefront FAQ entry",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "question": { "type": "string", "minLength": 2, "maxLength": 300 },
+        "answer": { "type": "string", "minLength": 2, "maxLength": 1000 }
+      },
+      "required": ["id", "question", "answer"]
+    },
+    "StoreSettings": {
+      "title": "StoreSettings",
+      "description": "Global storefront settings, maintenance config, theme, and copy",
+      "type": "object",
+      "properties": {
+        "isAcceptingOrders": { "type": "boolean" },
+        "pauseMessage": { "type": "string", "maxLength": 500 },
+        "isMaintenanceMode": { "type": "boolean" },
+        "maintenanceTitle": { "type": "string", "maxLength": 160 },
+        "maintenanceMessage": { "type": "string", "maxLength": 600 },
+        "maintenanceExpectedReturn": { "type": "string", "maxLength": 120 },
+        "maintenanceAllowTracking": { "type": "boolean" },
+        "maintenanceAllowWhatsApp": { "type": "boolean" },
+        "delayedOrderThresholdMinutes": { "type": "number" },
+        "autoBackupEnabled": { "type": "boolean" },
+        "autoBackupIntervalHours": { "type": "number" },
+        "whatsappNumber": { "type": "string", "maxLength": 30 },
+        "brandLogoUrl": { "type": "string", "maxLength": 600000 },
+        "theme": { "type": "object" },
+        "copy": { "type": "object" },
+        "socialLinks": { "type": "object" }
+      },
+      "required": ["isAcceptingOrders", "isMaintenanceMode", "whatsappNumber", "theme", "copy"]
+    },
+    "StaffUser": {
+      "title": "StaffUser",
+      "description": "Authorized staff/owner profile and RBAC permissions keyed by lowercase email",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 160 },
+        "email": { "type": "string", "maxLength": 160 },
+        "name": { "type": "string", "minLength": 2, "maxLength": 120 },
+        "username": { "type": "string", "maxLength": 120 },
+        "role": { "type": "string", "enum": ["owner", "manager", "employee"] },
+        "isActive": { "type": "boolean" },
+        "permissions": { "type": "object" },
+        "createdAt": { "type": "string", "maxLength": 64 },
+        "lastLoginAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "email", "name", "username", "role", "isActive", "permissions", "createdAt"]
+    },
+    "AuditLogEntry": {
+      "title": "AuditLogEntry",
+      "description": "Immutable admin/security audit trail",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "actorName": { "type": "string", "maxLength": 120 },
+        "actorEmail": { "type": "string", "maxLength": 160 },
+        "actorRole": { "type": "string", "maxLength": 40 },
+        "action": { "type": "string", "maxLength": 160 },
+        "details": { "type": "string", "maxLength": 600 },
+        "timestamp": { "type": "string", "maxLength": 64 },
+        "serverTimestamp": { "type": "object" },
+        "isSecurityEvent": { "type": "boolean" }
+      },
+      "required": ["id", "actorName", "actorRole", "action", "details", "timestamp", "serverTimestamp"]
+    },
+    "BackupSnapshot": {
+      "title": "BackupSnapshot",
+      "description": "Cloud backup snapshot for products, orders, and settings",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "label": { "type": "string", "maxLength": 160 },
+        "kind": { "type": "string", "enum": ["auto", "manual"] },
+        "createdAt": { "type": "string", "maxLength": 64 },
+        "createdBy": { "type": "string", "maxLength": 120 },
+        "stats": { "type": "object" },
+        "payloadJson": { "type": "string", "maxLength": 850000 }
+      },
+      "required": ["id", "label", "kind", "createdAt", "createdBy", "stats", "payloadJson"]
+    },
+    "NotificationState": {
+      "title": "NotificationState",
+      "description": "Per-staff read and dismissed notification IDs",
+      "type": "object",
+      "properties": {
+        "readNotificationIds": { "type": "array" },
+        "dismissedNotificationIds": { "type": "array" },
+        "updatedAt": { "type": "object" }
+      },
+      "required": ["readNotificationIds", "dismissedNotificationIds", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/categories/{categoryId}": {
+      "schema": { "$ref": "#/entities/Category" },
+      "description": "Publicly readable product categories managed by authorized staff"
+    },
+    "/products/{productId}": {
+      "schema": { "$ref": "#/entities/Product" },
+      "description": "Publicly readable product catalog managed by authorized staff"
+    },
+    "/banners/{bannerId}": {
+      "schema": { "$ref": "#/entities/Banner" },
+      "description": "Publicly readable promotional banners managed by authorized staff"
+    },
+    "/zones/{zoneId}": {
+      "schema": { "$ref": "#/entities/DeliveryZone" },
+      "description": "Publicly readable delivery zones managed by authorized staff"
+    },
+    "/coupons/{couponCode}": {
+      "schema": { "$ref": "#/entities/Coupon" },
+      "description": "Discount coupons validated individually by code and managed by staff"
+    },
+    "/settings/{docId}": {
+      "schema": { "$ref": "#/entities/StoreSettings" },
+      "description": "Storefront global configuration and maintenance mode settings"
+    },
+    "/faqs/{faqId}": {
+      "schema": { "$ref": "#/entities/FaqItem" },
+      "description": "Frequently asked questions displayed on the storefront"
+    },
+    "/reviews/{reviewId}": {
+      "schema": { "$ref": "#/entities/ProductReview" },
+      "description": "Product reviews (only approved visible publicly; pending moderated by staff)"
+    },
+    "/orders/{orderId}": {
+      "schema": { "$ref": "#/entities/Order" },
+      "description": "Full customer orders containing PII (strictly staff-readable only)"
+    },
+    "/order_tracking/{trackingId}": {
+      "schema": { "$ref": "#/entities/OrderTracking" },
+      "description": "Individual private tracking lookup keyed by orderNumber_phone (no list queries)"
+    },
+    "/order_customer_actions/{actionId}": {
+      "schema": { "$ref": "#/entities/OrderCustomerAction" },
+      "description": "Customer pre-prep edits, cancellations, and substitute responses synced by staff"
+    },
+    "/phone_order_histories/{phone}": {
+      "schema": { "$ref": "#/entities/PhoneOrderHistory" },
+      "description": "Order number history per phone number (get only, no list queries)"
+    },
+    "/complaints/{complaintId}": {
+      "schema": { "$ref": "#/entities/ComplaintSuggestion" },
+      "description": "Customer complaints and suggestions (staff-readable only)"
+    },
+    "/return_requests/{returnId}": {
+      "schema": { "$ref": "#/entities/ReturnRequest" },
+      "description": "Full return and exchange requests (staff-readable only)"
+    },
+    "/return_tracking/{trackingId}": {
+      "schema": { "$ref": "#/entities/ReturnTracking" },
+      "description": "Individual return tracking lookup keyed by returnCode_phone (no list queries)"
+    },
+    "/staff_users/{staffEmail}": {
+      "schema": { "$ref": "#/entities/StaffUser" },
+      "description": "Authorized staff profiles and permissions keyed by lowercase Google email"
+    },
+    "/audit_log/{logId}": {
+      "schema": { "$ref": "#/entities/AuditLogEntry" },
+      "description": "Immutable admin and security activity audit log"
+    },
+    "/backup_snapshots/{snapshotId}": {
+      "schema": { "$ref": "#/entities/BackupSnapshot" },
+      "description": "Cloud backup snapshots managed by authorized staff"
+    },
+    "/staff_notification_state/{staffEmail}": {
+      "schema": { "$ref": "#/entities/NotificationState" },
+      "description": "Per-staff read and dismissed notification tracking"
+    }
+  }
+}

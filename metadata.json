@@ -1,0 +1,6 @@
+{
+  "name": "TABA | معرض طابا",
+  "description": "متجر معرض طابا الإلكتروني ولوحة الإدارة ونظام الطلبات والمخزون — كل احتياجات بيتك في مكان واحد.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
